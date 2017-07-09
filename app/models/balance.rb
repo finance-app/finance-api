@@ -1,0 +1,2 @@
+class Balance < BalanceBase
+end
