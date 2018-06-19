@@ -8,6 +8,7 @@ class CurrenciesController < ApplicationController
     ).references(:accounts, :budgets).where(user: current_user)
     @transactions = Transaction.includes(:budget).where(periods: {budgets: {user: current_user}}).group("budgets.currency_id").count
     @balances = BalanceBase.where(owner: nil, timeperiod: nil, transaction_type: nil).group(:currency_id, :type).sum(:value)
+    @accounts_balances = Balance.where(owner_type: 'Account', timeperiod: nil, transaction_type: nil, currency: Currency.where(user: current_user)).group('currency_id').sum(:value)
   end
 
   def show
