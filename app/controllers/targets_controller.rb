@@ -11,7 +11,7 @@ class TargetsController < ApplicationController
       user: current_user,
       default_income_transaction_category: params[:default_income_transaction_category_id],
       default_expense_transaction_category: params[:default_expense_transaction_category_id]
-    }.compact).references(:transaction_categories, :transactions).order('targets.name ASC')
+    }.compact).references(:transaction_categories, :transactions).order('targets.name COLLATE NOCASE')
 
     if params[:period_id]
       # If period is defined, return only targets which has transactions in this period
@@ -37,7 +37,7 @@ class TargetsController < ApplicationController
 
     case params[:sort_by]
     when 'favourite'
-      @targets = @targets.reorder('targets.favourite DESC', 'targets.name ASC')
+      @targets = @targets.reorder('favourite DESC', 'targets.name COLLATE NOCASE')
     else
       # Do nothing
     end
@@ -67,6 +67,7 @@ class TargetsController < ApplicationController
   def create
     @target = Target.new(target_params)
     @target.user = current_user
+    @target.favourite = target_params[:favourite] || false
 
     if @target.save
       @balances = {}
