@@ -67,6 +67,7 @@ class TargetsController < ApplicationController
   def create
     @target = Target.new(target_params)
     @target.user = current_user
+    @target.favourite = target_params[:favourite] || false
 
     if @target.save
       @balances = {}

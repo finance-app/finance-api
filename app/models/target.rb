@@ -14,6 +14,7 @@ class Target < ApplicationRecord
   # Validation rules
   validates :name, presence: true, uniqueness: { scope: :user }
   validates :user, presence: true
+  validates :favourite, inclusion: { in: [ true, false ] }
 
   def transactions
     self.expenses_transactions + self.incomes_transactions
