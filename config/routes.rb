@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :accounts do
     resources :transactions
     get 'edit'
+    get 'current_balance'
     post 'correct'
   end
 

@@ -1,5 +1,5 @@
 class AccountsController < ApplicationController
-  before_action :set_account, only: [:edit, :destroy, :update, :correct]
+  before_action :set_account, only: [:edit, :destroy, :update, :correct, :current_balance]
 
   def index
     @accounts = Account.includes(
@@ -182,6 +182,14 @@ class AccountsController < ApplicationController
       end
     end
     head :no_content, status: :ok
+  end
+
+  def current_balance
+    render json: {
+      name: @account.name,
+      value: Balance.where(owner: @account, timeperiod: nil, transaction_type: nil).sum(:value),
+      date: Date.today,
+    }
   end
 
   def transfer
