@@ -6,12 +6,14 @@ class TargetsController < ApplicationController
       :default_income_transaction_category,
       :default_expense_transaction_category,
       :incomes_transactions,
-      :expenses_transactions
+      :expenses_transactions,
+      :targets_budgets,
+      :budgets => [:currency],
     ).where({
       user: current_user,
       default_income_transaction_category: params[:default_income_transaction_category_id],
       default_expense_transaction_category: params[:default_expense_transaction_category_id]
-    }.compact).references(:transaction_categories, :transactions).order('targets.name COLLATE NOCASE')
+    }.compact).references(:transaction_categories, :transactions, :budgets).order('targets.name COLLATE NOCASE')
 
     if params[:period_id]
       # If period is defined, return only targets which has transactions in this period
@@ -21,7 +23,15 @@ class TargetsController < ApplicationController
       @expenses_transactions = Hash[Transaction.where(destination_type: 'Target', period_id: params[:period_id]).group(:destination_id).count]
       @balances = BalanceBase.where(timeperiod_type: 'Period', timeperiod_id: params[:period_id], owner_type: 'Target', transaction_type: nil).group(:owner_id, :type).sum(:value)
     elsif params[:budget_id]
-      @targets = @targets.where('transactions.budget_id = ? OR expenses_transactions_targets.budget_id = ?', params[:budget_id], params[:budget_id])
+      # If budget is defined, find only targets, which have transactions in this budget,
+      # but also fetch all associated budgets with targets.
+      #
+      # If show_empty param is present, return also targets, which have no transactions and no budgets assigned (newly created global targets).
+      where = '((transactions.budget_id = ? OR expenses_transactions_targets.budget_id = ?) AND budgets.id IS NULL) OR (budgets_targets.target_id = targets.id AND budgets_targets.budget_id = ?)'
+      if params[:show_empty]
+        where += ' OR budgets.id IS NULL'
+      end
+      @targets = @targets.where(where, params[:budget_id], params[:budget_id], params[:budget_id])
 
       @incomes_transactions = Hash[Transaction.where(source_type: 'Target', budget_id: params[:budget_id]).group(:source_id).count]
       @expenses_transactions = Hash[Transaction.where(destination_type: 'Target', budget_id: params[:budget_id]).group(:destination_id).count]
@@ -57,6 +67,8 @@ class TargetsController < ApplicationController
 
   # PATCH/PUT /target/1
   def update
+    @target.budgets = Budget.where(user: current_user).find(params[:budgets])
+
     if @target.update(target_params)
       head :no_content, status: :ok
     else
@@ -68,6 +80,10 @@ class TargetsController < ApplicationController
     @target = Target.new(target_params)
     @target.user = current_user
     @target.favourite = target_params[:favourite] || false
+
+    if params[:budgets]
+      @target.budgets = Budget.where(user: current_user).find(params[:budgets])
+    end
 
     if @target.save
       @balances = {}
@@ -93,7 +109,7 @@ class TargetsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def target_params
-      params.require(:target).permit(:name, :comment, :default_income_transaction_category_id, :default_expense_transaction_category_id, :sort_by, :favourite)
+      params.require(:target).permit(:name, :comment, :default_income_transaction_category_id, :default_expense_transaction_category_id, :sort_by, :favourite, :budgets, :show_empty)
     end
 
     def show_helper

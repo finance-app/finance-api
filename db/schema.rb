@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180624114154) do
+ActiveRecord::Schema.define(version: 2018_07_01_223826) do
 
   create_table "accounts", force: :cascade do |t|
     t.string "name", null: false
@@ -55,6 +55,11 @@ ActiveRecord::Schema.define(version: 20180624114154) do
     t.index ["currency_id"], name: "index_budgets_on_currency_id"
     t.index ["default_account_id"], name: "index_budgets_on_default_account_id"
     t.index ["user_id"], name: "index_budgets_on_user_id"
+  end
+
+  create_table "budgets_targets", id: false, force: :cascade do |t|
+    t.integer "target_id", null: false
+    t.integer "budget_id", null: false
   end
 
   create_table "currencies", force: :cascade do |t|

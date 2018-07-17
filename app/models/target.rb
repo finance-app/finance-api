@@ -11,6 +11,8 @@ class Target < ApplicationRecord
   has_many :incomes, class_name: 'Income', as: :owner, dependent: :destroy
   has_many :expenses, class_name: 'Expense', as: :owner, dependent: :destroy
 
+  has_and_belongs_to_many :budgets
+
   # Validation rules
   validates :name, presence: true, uniqueness: { scope: :user }
   validates :user, presence: true

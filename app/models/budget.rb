@@ -11,6 +11,8 @@ class Budget < ApplicationRecord
   has_many :incomes, class_name: 'Income', as: :timeperiod, dependent: :destroy
   has_many :expenses, class_name: 'Expense', as: :timeperiod, dependent: :destroy
 
+  has_and_belongs_to_many :targets
+
   # Validation rules
   validates :name, presence: true, uniqueness: { scope: [:user, :currency] }
   validates :user, presence: true

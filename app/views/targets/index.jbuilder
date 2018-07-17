@@ -15,4 +15,10 @@ json.array! @targets do |target|
   json.expenses_balance @balances[[target.id, 'Expense']]
   json.balance @balances[[target.id, 'Balance']]
   json.transactions target.incomes_transactions.size + target.expenses_transactions.size
+  json.budgets target.budgets do |budget|
+    json.(budget, :id, :name)
+    json.currency do
+      json.(budget.currency, :id, :name, :symbol)
+    end
+  end
 end
