@@ -3,6 +3,9 @@ json.array! @budgets do |budget|
   if budget.default_account
     json.default_account do
       json.(budget.default_account, :id, :name)
+      json.currency do
+        json.(budget.default_account.currency, :id, :name, :symbol)
+      end
     end
   end
   json.currency do
