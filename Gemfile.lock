@@ -52,7 +52,7 @@ GEM
     arel (9.0.0)
     bcrypt (3.1.12)
     builder (3.2.3)
-    bullet (5.7.5)
+    bullet (5.7.6)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11.0)
     byebug (10.0.2)
@@ -99,13 +99,11 @@ GEM
     nio4r (2.3.1)
     nokogiri (1.8.4)
       mini_portile2 (~> 2.3.0)
-    oj (3.6.5)
+    oj (3.6.9)
     oj_mimic_json (1.0.1)
-    paper_trail (9.2.0)
+    paper_trail (10.0.1)
       activerecord (>= 4.2, < 5.3)
-      paper_trail-association_tracking (< 2)
       request_store (~> 1.1)
-    paper_trail-association_tracking (1.0.0)
     puma (3.11.4)
     rack (2.0.5)
     rack-cors (1.0.2)
@@ -187,7 +185,7 @@ DEPENDENCIES
   paper_trail
   puma (~> 3.11.4)
   rack-cors
-  rails (~> 5.2.0)
+  rails (~> 5.2.1)
   simple_enum
   spring
   spring-watcher-listen (~> 2.0.0)
