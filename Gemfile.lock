@@ -1,3 +1,10 @@
+GIT
+  remote: git@github.com:route/query_trail.git
+  revision: 3b1c1bc7135a7b59b745c93dc4f883b87b40b3cc
+  specs:
+    query_trail (1.0)
+      rails (>= 4.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -184,6 +191,7 @@ DEPENDENCIES
   oj_mimic_json
   paper_trail
   puma (~> 3.11.4)
+  query_trail!
   rack-cors
   rails (~> 5.2.1)
   simple_enum
