@@ -45,10 +45,12 @@ class Transaction < ApplicationRecord
   end
 
   def update_all_balances(value)
-    # Compare .balances with .balances_hash
+    # Fetch existing balances from database
     balances = self.balances
+    # Convert them to array, so we don't have to select on database multiple times
     balances_array = balances.to_a
 
+    # Check which balances does not exist and needs to be created
     balances_to_create = self.balances_hash.delete_if do |a|
       balances_array.select do |b|
         (a[:type] == b.type &&
@@ -61,39 +63,42 @@ class Transaction < ApplicationRecord
       end.any?
     end
 
+    # Create missing balances
     if balances_to_create.any?
       BalanceBase.import(balances_to_create)
     end
 
+    # Update existing balances
     balances.each do |balance|
       self.update_balance(value, balance)
     end
   end
 
   def update_balance(value, balance)
+    new_value = balance.value
     case balance
     when Balance
       # Expense
       if self.source.is_a?(Account) or self.destination.is_a?(Target)
-        balance.value -= value
+        new_value -= value
       # Income
       else
-        balance.value += value
+        new_value += value
       end
     when Income
       if self.destination.is_a?(Account) or self.source.is_a?(Target)
-        balance.value += value
+        new_value += value
       end
     when Expense
       if self.source.is_a?(Account) or self.destination.is_a?(Target)
-        balance.value -= value
+        new_value -= value
       end
     end
 
-    if balance.value == 0
+    if new_value == 0
       balance.destroy!
     else
-      balance.save!
+      balance.update_attribute(:value, new_value)
     end
   end
 
@@ -128,6 +133,7 @@ class Transaction < ApplicationRecord
     end
   end
 
+  # Returns actual balances from database
   def balances
     base = BalanceBase.where(date: self.date, currency: self.currency)
     first = true
@@ -152,6 +158,7 @@ class Transaction < ApplicationRecord
     result.includes(:currency)
   end
 
+  # Returns balances schema, which transaction should have associated and stored in database
   def balances_hash
     currency_id = self.currency.id
     transaction_type = self.transaction_type.capitalize
