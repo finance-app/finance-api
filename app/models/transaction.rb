@@ -75,29 +75,30 @@ class Transaction < ApplicationRecord
   end
 
   def update_balance(value, balance)
+    new_value = balance.value
     case balance
     when Balance
       # Expense
       if self.source.is_a?(Account) or self.destination.is_a?(Target)
-        balance.value -= value
+        new_value -= value
       # Income
       else
-        balance.value += value
+        new_value += value
       end
     when Income
       if self.destination.is_a?(Account) or self.source.is_a?(Target)
-        balance.value += value
+        new_value += value
       end
     when Expense
       if self.source.is_a?(Account) or self.destination.is_a?(Target)
-        balance.value -= value
+        new_value -= value
       end
     end
 
-    if balance.value == 0
+    if new_value == 0
       balance.destroy!
     else
-      balance.save!
+      balance.update_attribute(:value, new_value)
     end
   end
 
