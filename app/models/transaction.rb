@@ -45,10 +45,12 @@ class Transaction < ApplicationRecord
   end
 
   def update_all_balances(value)
-    # Compare .balances with .balances_hash
+    # Fetch existing balances from database
     balances = self.balances
+    # Convert them to array, so we don't have to select on database multiple times
     balances_array = balances.to_a
 
+    # Check which balances does not exist and needs to be created
     balances_to_create = self.balances_hash.delete_if do |a|
       balances_array.select do |b|
         (a[:type] == b.type &&
@@ -61,10 +63,12 @@ class Transaction < ApplicationRecord
       end.any?
     end
 
+    # Create missing balances
     if balances_to_create.any?
       BalanceBase.import(balances_to_create)
     end
 
+    # Update existing balances
     balances.each do |balance|
       self.update_balance(value, balance)
     end
@@ -128,6 +132,7 @@ class Transaction < ApplicationRecord
     end
   end
 
+  # Returns actual balances from database
   def balances
     base = BalanceBase.where(date: self.date, currency: self.currency)
     first = true
@@ -152,6 +157,7 @@ class Transaction < ApplicationRecord
     result.includes(:currency)
   end
 
+  # Returns balances schema, which transaction should have associated and stored in database
   def balances_hash
     currency_id = self.currency.id
     transaction_type = self.transaction_type.capitalize
