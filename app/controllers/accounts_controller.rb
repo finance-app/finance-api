@@ -26,21 +26,19 @@ class AccountsController < ApplicationController
 
   def balances
     params.permit(:currency_id, :provider, :type, :period_id)
+
+    # If period is defined without currency, use periods currency
+    currency = params[:period_id] && !params.has_key?(:currency_id) ? Period.find(params[:period_id]).currency.id : params[:currency_id]
+
     @accounts = Account.includes(
       :currency,
     ).where(
       accounts: {
         user: current_user,
-        currency: params[:currency_id],
+        currency: currency,
         type: params[:type]
       }.compact
     ).references(:currencies)
-
-    if params[:period_id]
-      currency = Period.find(params[:period_id]).currency.id
-    else
-      currency = params[:currency_id]
-    end
 
     # Fetch all balances belonging to requested accounts
     balances_tmp = Balance.where(owner: @accounts, timeperiod: nil, transaction_type: nil, currency_id: currency).order('date ASC')
