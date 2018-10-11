@@ -10,7 +10,7 @@ class TransactionsController < ApplicationController
     ).where(user: current_user).where({
       transaction_category: params[:transaction_category_id],
       type: params[:type],
-    }.compact).references(:periods, :budgets).order('transactions.date DESC', 'transactions.updated_at DESC')
+    }.compact).references(:periods, :budgets).order('transactions.date DESC', 'transactions.created_at DESC')
 
     # Allow filtering by periods and budgets
     if params[:period_id]
