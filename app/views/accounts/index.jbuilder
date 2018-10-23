@@ -6,5 +6,5 @@ json.array! @accounts do |account|
   json.incomes_balance @balances[[account.id, 'Income']]
   json.expenses_balance @balances[[account.id, 'Expense']]
   json.balance @balances[[account.id, 'Balance']]
-  json.balances @balance[account.id]
+  json.current_balance @current_balances[account.id]
 end

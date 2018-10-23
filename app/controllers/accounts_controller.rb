@@ -11,17 +11,17 @@ class AccountsController < ApplicationController
         type: params[:type]
       }.compact
     ).references(:currencies)
-    @balances = BalanceBase.where(owner: @accounts, timeperiod: nil, transaction_type: nil).group(:owner_id, :type).sum(:value)
 
-    balances_tmp = Balance.where(owner: @accounts, timeperiod: nil, transaction_type: nil).order('date ASC')
-    @balance = {}
-    @accounts.each do |account|
-      sum = 0
-      @balance[account.id] = balances_tmp.select{|a| a.owner_id == account.id}.collect do |b|
-        sum += b.value
-        {value: sum, date: b.date}
-      end
+    @current_balances = Balance.where(owner: @accounts, timeperiod: nil, transaction_type: nil).group(:owner_id).sum(:value)
+
+    # Allow filtering by periods and budgets
+    if params[:period_id] or params[:budget_id]
+      @balances = BalanceBase.where(owner: @accounts, timeperiod_id: (params[:period_id] || params[:budget_id]), timeperiod_type: params[:period_id] ? 'Period' : 'Budget', transaction_type: nil)
+    else
+      @balances = BalanceBase.where(owner: @accounts, timeperiod: nil, transaction_type: nil)
     end
+
+    @balances = @balances.group(:owner_id, :type).sum(:value)
   end
 
   def balances
