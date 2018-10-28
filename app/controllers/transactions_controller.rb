@@ -100,16 +100,25 @@ class TransactionsController < ApplicationController
       @transaction.destination = nil
     end
 
-    @currency = @transaction.period.currency
-    @transaction.source_currency = @currency
-    @transaction.destination_currency = @currency
-    @transaction.user = current_user
-
-    if @transaction.save
-      render :show, status: :created
+    # Cross-currencies transactions are not implemented
+    if @transaction.account && @transaction.account.currency != @transaction.period.currency
+      json = {}
+      json[@transaction.destination_currency ? 'destination_id' : 'source_id'] = [" account currency does not match budget currency"]
+      render json: json, status: :unprocessable_entity
     else
-      puts @transaction.errors
-      render json: @transaction.errors, status: :unprocessable_entity
+
+      # Table structure is ready for cross-currencies transactions
+      # so we need to fill both source and destination currency.
+      @transaction.source_currency = @transaction.destination_currency = @transaction.period.currency
+
+      @transaction.user = current_user
+
+      if @transaction.save
+        render :show, status: :created
+      else
+        puts @transaction.errors
+        render json: @transaction.errors, status: :unprocessable_entity
+      end
     end
   end
 
