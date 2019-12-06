@@ -111,7 +111,7 @@ GEM
     paper_trail (10.3.1)
       activerecord (>= 4.2)
       request_store (~> 1.1)
-    puma (3.11.4)
+    puma (3.12.2)
     rack (2.0.7)
     rack-cors (1.0.5)
       rack (>= 1.6.0)
@@ -192,7 +192,7 @@ DEPENDENCIES
   oj
   oj_mimic_json
   paper_trail
-  puma (~> 3.11.4)
+  puma (~> 3.12.2)
   query_trail!
   rack-cors
   rails (~> 5.2.1)
