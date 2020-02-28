@@ -113,7 +113,7 @@ GEM
     paper_trail (10.3.1)
       activerecord (>= 4.2)
       request_store (~> 1.1)
-    puma (3.12.2)
+    puma (3.12.4)
     rack (2.2.2)
     rack-cors (1.1.1)
       rack (>= 2.0.0)
