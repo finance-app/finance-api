@@ -114,7 +114,7 @@ GEM
       activerecord (>= 4.2)
       request_store (~> 1.1)
     puma (3.12.6)
-    rack (2.2.2)
+    rack (2.2.3)
     rack-cors (1.1.1)
       rack (>= 2.0.0)
     rack-test (1.1.0)
