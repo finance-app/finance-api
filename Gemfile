@@ -60,7 +60,7 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'lol_dba'
   gem 'bullet'
-  gem 'query_trail', :git => 'git@github.com:route/query_trail.git'
+  gem 'query_trail', :git => 'https://github.com/route/query_trail'
   gem 'irb'
   gem 'mini_portile2'
 end

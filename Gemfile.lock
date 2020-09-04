@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:route/query_trail.git
+  remote: https://github.com/route/query_trail
   revision: 3b1c1bc7135a7b59b745c93dc4f883b87b40b3cc
   specs:
     query_trail (1.0)
