@@ -7,7 +7,6 @@ class TargetsController < ApplicationController
       :default_expense_transaction_category,
       :incomes_transactions,
       :expenses_transactions,
-      :targets_budgets,
       :budgets => [:currency],
     ).where({
       user: current_user,

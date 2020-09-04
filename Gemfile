@@ -7,20 +7,20 @@ end
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.1'
+gem 'rails', '~> 6.0'
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3', '~> 1.3.6'
+gem 'sqlite3', '~> 1.4'
 # Use Puma as the app server
-gem 'puma', '~> 3.12.2'
+gem 'puma', '~> 4.3'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.7'
+gem 'jbuilder', '~> 2.10'
 
-gem 'active_model_serializers', '~> 0.10.7'
+gem 'active_model_serializers', '~> 0.10.10'
 
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
-gem 'bcrypt', '~> 3.1.7'
+gem 'bcrypt', '~> 3.1.16'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
@@ -28,8 +28,13 @@ gem 'bcrypt', '~> 3.1.7'
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
 
+
 # Use Knock as authentication gem
-gem 'knock'
+#
+# Need to use this specific commit, which is unofficially the 2.2 release,
+#   because the new version hasn't been released to RubyGems yet.
+gem "knock", github: "nsarno/knock", branch: "master",
+    ref: "9214cd027422df8dc31eb67c60032fbbf8fc100b"
 
 # Workaround for https://github.com/seattlerb/minitest/issues/730
 gem 'minitest', '5.10.3'
