@@ -38,3 +38,5 @@ tags
 
 # Don't copy git files into the image.
 /.git
+
+/chart
