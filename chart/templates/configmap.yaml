@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "finance-api.fullname" . }}
+  labels:
+    {{- include "finance-api.labels" . | nindent 4 }}
+data:
+  database.yml: |-
+    production:
+      adapter: sqlite3
+      pool: 5
+      timeout: 5000
+      database: db/data/production.sqlite3

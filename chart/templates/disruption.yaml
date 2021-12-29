@@ -1,0 +1,11 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "finance-api.fullname" . }}
+  labels:
+    {{- include "finance-api.labels" . | nindent 4 }}
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      {{- include "finance-api.selectorLabels" . | nindent 6 }}
