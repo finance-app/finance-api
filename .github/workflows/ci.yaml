@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  pull_request:
+  # As we do not require linear history for merging, it may occur that master branch will break if there are
+  # soft-conflicting PRs merged without re-running the CI, so this will at least identify such breakage.
+  push:
+    branches:
+    - master
+  # Run CI against master branch every week to ensure all dependencies are still available for building etc.
+  schedule:
+  - cron: '45 15 */7 * *'
+
+jobs:
+  container-image:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Build container image
+      uses: docker/build-push-action@v2
